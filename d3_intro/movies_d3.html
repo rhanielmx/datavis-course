@@ -89,7 +89,7 @@
                 return (d.Worldwide_Gross_M-d.Budget_M) * chart_wd/max_wd + "px";
             })
             .select("span")
-                .text(function(d){return data[0].Film});
+                .text(d=>d.Film);
          if(comparator3)
             d3.select("#chart3")
                 .selectAll("div.h-bar") 
