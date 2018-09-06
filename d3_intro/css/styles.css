@@ -35,7 +35,7 @@ span h1{
     margin: auto;
 }
 
-.block{
+.chart{
     min-height: 300px;
     color: white;
     margin: 15px;
@@ -45,13 +45,16 @@ span h1{
     clear: both;
 }
 
-.chart1{
+#chart1 .h-bar{
+    background-color: steelblue;
 }
 
-.chart2{
+#chart2 .h-bar{
+    background-color: forestgreen;
 }
 
-.chart3{
+#chart3 .h-bar{
+    background-color: orangered;
 }
 
 .chart4{
@@ -60,7 +63,6 @@ span h1{
 .h-bar {
     min-height: 15px;
     min-width: 10px;
-    background-color: steelblue;
     margin-bottom: 2px;
     font-size: 11px;
     color: #f0f8ff;
