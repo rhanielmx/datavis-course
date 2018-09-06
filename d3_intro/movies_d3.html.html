@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Movies</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+</head>
+
+<body>
+    <div class="container">
+        <div class="block" id="chart1">1</div>
+        <div class="block" id="chart2">2</div>
+        <div class="block" id="chart3">3</div>
+        <div class="block" id="chart4">4</div>
+    </div>
+<script type="text/javascript">
+    function render(data, comparator1, comparator2, comparator3) {
+        d3.select("#chart1").append("div").attr("class","chart1").append("span").append("h1").text("Gráfico de filmes ordenado pela bilheteria");
+        d3.select("#chart1").selectAll("div.h-bar")
+                .data(data)
+            .enter().append("div")
+            .attr("class", "h-bar")
+            .append("span");
+        
+        d3.select("#chart1").selectAll("div.h-bar")
+                .data(data)
+            .attr("class", "h-bar")
+            .style("max-width", function (d) {
+                return(d3.select(".chart1").node().getBoundingClientRect().width + "px");
+            })
+            .style("width", function (d) {
+                let min_wd = data.sort(comparator1)[data.length-1].Worldwide_Gross_M;
+                let max_wd = data.sort(comparator1)[0].Worldwide_Gross_M
+                
+                return d3.select(".chart1").node().getBoundingClientRect().width*((d.Worldwide_Gross_M)/(max_wd-min_wd)) + "px";
+            })
+            .select("span")
+                .text(function(d){return d.Film});
+         if(comparator1)
+            d3.select("#chart1")
+                .selectAll("div.h-bar") 
+                .sort(comparator1);
+        
+        d3.select("#chart2").append("div").attr("class","chart2").append("span").append("h1").text("Gráfico de filmes ordenado pelo orçamento");
+        d3.select("#chart2").selectAll("div.h-bar")
+                .data(data)
+            .enter().append("div")
+            .attr("class", "h-bar")
+            .append("span");
+        
+        d3.select("#chart2").selectAll("div.h-bar")
+                .data(data)
+            .attr("class", "h-bar")
+            .style("max-width", function (d) {
+                return(d3.select("#chart2").node().getBoundingClientRect().width + "px");
+            })
+            .style("width", function (d) {
+                let min_wd = data.sort(comparator2)[data.length-1].Budget_M;
+                let max_wd = data.sort(comparator2)[0].Budget_M
+                
+                return d3.select("#chart2").node().getBoundingClientRect().width*((d.Budget_M)/(max_wd-min_wd)) + "px";
+            })
+            .select("span")
+                .text(function(d){return d.Film});
+         if(comparator2)
+            d3.select("#chart2")
+                .selectAll("div.h-bar") 
+                .sort(comparator2);
+        
+        d3.select("#chart3").append("div").attr("class","chart3").append("span").append("h1").text("Gráfico de filmes ordenado pelo lucro");
+        d3.select("#chart3").selectAll("div.h-bar")
+                .data(data)
+            .enter().append("div")
+            .attr("class", "h-bar")
+            .append("span");
+        
+        d3.select("#chart3").selectAll("div.h-bar")
+                .data(data)
+            .attr("class", "h-bar")
+            .style("max-width", function (d) {
+                return(d3.select("#chart3").node().getBoundingClientRect().width + "px");
+            })
+            .style("width", function (d) {
+                let min_wd = data.sort(comparator3)[data.length-1].Worldwide_Gross_M-data.sort(comparator3)[data.length-1].Budget_M;
+                let max_wd = data.sort(comparator3)[0].Worldwide_Gross_M-data.sort(comparator3)[0].Budget_M;
+                
+                return d3.select("#chart3").node().getBoundingClientRect().width*(d.Worldwide_Gross_M-d.Budget_M)/(max_wd-min_wd) + "px";
+            })
+            .select("span")
+                .text(d=>d.Film);
+         if(comparator3)
+            d3.select("#chart3")
+                .selectAll("div.h-bar") 
+                .sort(comparator3);
+    
+    }
+
+    let comparaBilheteria = function (a, b) { 
+        return b.Worldwide_Gross_M - a.Worldwide_Gross_M;
+    };
+    let comparaOrcamento = function (a, b) { 
+        return b.Budget_M - a.Budget_M;
+    };
+    let comparaLucro = function (a, b) { 
+        return (b.Worldwide_Gross_M-b.Budget_M) - (a.Worldwide_Gross_M-a.Budget_M);
+    };
+    
+    d3.json("data/movies.json").then(function(json){ 
+        render(json, comparaBilheteria, comparaOrcamento, comparaLucro);
+    });
+</script>
+</body>
+</html>
