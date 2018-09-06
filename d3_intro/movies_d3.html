@@ -89,12 +89,81 @@
                 return (d.Worldwide_Gross_M-d.Budget_M) * chart_wd/max_wd + "px";
             })
             .select("span")
-                .text(d=>d.Film);
+                .text(function(d){return data[0].Film});
          if(comparator3)
             d3.select("#chart3")
                 .selectAll("div.h-bar") 
                 .sort(comparator3);
+        
+        data2 = parseData(data);
+        
+        d3.select("#chart4").append("span").append("h1").text("Gráfico de gêneros ordenado pela bilheteria");
+        d3.select("#chart4").selectAll("div.h-bar")
+                .data(data2)
+            .enter().append("div")
+            .attr("class", "h-bar")
+            .append("span");
+        
+        d3.select("#chart4").selectAll("div.h-bar")
+                .data(data2)
+            .attr("class", "h-bar")
+            .style("max-width", function (d) {
+                return(d3.select("#chart4").node().getBoundingClientRect().width + "px");
+            })
+            .style("width", function (d) {
+                let max_wd = data2.sort(comparator1)[0].Worldwide_Gross_M;
+                let chart_wd = d3.select("#chart4").node().getBoundingClientRect().width;
+                
+                return (d.Worldwide_Gross_M) * chart_wd/max_wd + "px";
+            })
+            .select("span")
+                .text(d=>d.Genre);
+         if(comparator1)
+            d3.select("#chart4")
+                .selectAll("div.h-bar") 
+                .sort(comparator1);
+        
+        
     
+    }; 
+    
+    function parseData(data){
+        let keys = Object.keys(data[0]);
+        let genres = [];
+        for(let i = 0; i < data.length; i++){
+            genres.push(data[i].Genre)
+        }
+        
+        function onlyUnique(value, index, self) { 
+            return self.indexOf(value) === index;
+        }
+        
+        genres_unique = genres.filter(onlyUnique); 
+        
+        let bilheterias = [];
+        let valBilheteria;
+        for(let j=0; j < genres_unique.length; j++){
+            valBilheteria=0;
+            for(let i = 0; i < data.length; i++){
+                if(data[i].Genre === genres_unique[j]){
+                    valBilheteria += data[i].Worldwide_Gross_M
+                }
+            }
+            bilheterias.push(valBilheteria);
+        };
+        
+        let newData = []
+        
+        for(let i = 0;i < bilheterias.length;i++){
+            let meuGenero = {
+                Genre: genres_unique[i],
+                Worldwide_Gross_M: bilheterias[i]
+            };
+            
+            newData.push(meuGenero)
+        }
+        return newData;
+        //d3.select("#chart4").append("span").append("h1").text(newData[ind].Genre+': '+newData[ind].Bilheteria);
     }
 
     let comparaBilheteria = function (a, b) { 
@@ -109,6 +178,7 @@
     
     d3.json("data/movies.json").then(function(json){ 
         render(json, comparaBilheteria, comparaOrcamento, comparaLucro);
+        //eval(json);
     });
 </script>
 </body>
