@@ -30,13 +30,13 @@
                 return(d3.select(".chart1").node().getBoundingClientRect().width + "px");
             })
             .style("width", function (d) {
-                let min_wd = data.sort(comparator1)[data.length-1].Worldwide_Gross_M;
-                let max_wd = data.sort(comparator1)[0].Worldwide_Gross_M
+                let max_wd = data.sort(comparator1)[0].Worldwide_Gross_M;
+                let chart_wd = d3.select("#chart1").node().getBoundingClientRect().width;
                 
-                return d3.select(".chart1").node().getBoundingClientRect().width*((d.Worldwide_Gross_M)/(max_wd-min_wd)) + "px";
+                return (d.Worldwide_Gross_M) * chart_wd/max_wd + "px";
             })
             .select("span")
-                .text(function(d){return d.Film});
+                .text(d=>d.Film);
          if(comparator1)
             d3.select("#chart1")
                 .selectAll("div.h-bar") 
@@ -56,13 +56,13 @@
                 return(d3.select("#chart2").node().getBoundingClientRect().width + "px");
             })
             .style("width", function (d) {
-                let min_wd = data.sort(comparator2)[data.length-1].Budget_M;
-                let max_wd = data.sort(comparator2)[0].Budget_M
-                
-                return d3.select("#chart2").node().getBoundingClientRect().width*((d.Budget_M)/(max_wd-min_wd)) + "px";
+                let max_wd = data.sort(comparator2)[0].Budget_M;
+                let chart_wd = d3.select("#chart2").node().getBoundingClientRect().width;
+            
+                return (d.Budget_M) * chart_wd/max_wd + "px";
             })
             .select("span")
-                .text(function(d){return d.Film});
+                .text(d=>d.Film);
          if(comparator2)
             d3.select("#chart2")
                 .selectAll("div.h-bar") 
@@ -82,10 +82,10 @@
                 return(d3.select("#chart3").node().getBoundingClientRect().width + "px");
             })
             .style("width", function (d) {
-                let min_wd = data.sort(comparator3)[data.length-1].Worldwide_Gross_M-data.sort(comparator3)[data.length-1].Budget_M;
                 let max_wd = data.sort(comparator3)[0].Worldwide_Gross_M-data.sort(comparator3)[0].Budget_M;
+                let chart_wd = d3.select("#chart3").node().getBoundingClientRect().width;
                 
-                return d3.select("#chart3").node().getBoundingClientRect().width*(d.Worldwide_Gross_M-d.Budget_M)/(max_wd-min_wd) + "px";
+                return (d.Worldwide_Gross_M-d.Budget_M) * chart_wd/max_wd + "px";
             })
             .select("span")
                 .text(d=>d.Film);
