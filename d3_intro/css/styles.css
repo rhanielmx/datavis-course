@@ -39,6 +39,7 @@ span h1{
     min-height: 300px;
     color: white;
     margin: 15px;
+    border-bottom: 1px solid lightgray;
 }
 
 .clearfix{
