@@ -17,7 +17,7 @@
     </div>
 <script type="text/javascript">
     function render(data, comparator1, comparator2, comparator3) {
-        d3.select("#chart1").append("span").append("h1").text("Gráfico de filmes ordenado pela bilheteria");
+        d3.select("#chart1").append("span").append("h1").text("Gráfico de filmes ordenado por bilheteria");
         d3.select("#chart1").selectAll("div.h-bar")
                 .data(data)
             .enter().append("div")
@@ -43,7 +43,7 @@
                 .selectAll("div.h-bar") 
                 .sort(comparator1);
         
-        d3.select("#chart2").append("span").append("h1").text("Gráfico de filmes ordenado pelo orçamento");
+        d3.select("#chart2").append("span").append("h1").text("Gráfico de filmes ordenado por orçamento");
         d3.select("#chart2").selectAll("div.h-bar")
                 .data(data)
             .enter().append("div")
@@ -69,7 +69,7 @@
                 .selectAll("div.h-bar") 
                 .sort(comparator2);
         
-        d3.select("#chart3").append("span").append("h1").text("Gráfico de filmes ordenado pelo lucro");
+        d3.select("#chart3").append("span").append("h1").text("Gráfico de filmes ordenado por lucro");
         d3.select("#chart3").selectAll("div.h-bar")
                 .data(data)
             .enter().append("div")
@@ -97,7 +97,7 @@
         
         data2 = parseData(data);
         
-        d3.select("#chart4").append("span").append("h1").text("Gráfico de gêneros ordenado pela bilheteria");
+        d3.select("#chart4").append("span").append("h1").text("Gráfico de gêneros ordenado por bilheteria");
         d3.select("#chart4").selectAll("div.h-bar")
                 .data(data2)
             .enter().append("div")
