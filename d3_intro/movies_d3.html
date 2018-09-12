@@ -95,23 +95,22 @@
                 .selectAll("div.h-bar") 
                 .sort(comparator3);
         
-        data2 = parseData(data);
-        
+        filmes = parseData(data);         
         d3.select("#chart4").append("span").append("h1").text("Gráfico de gêneros ordenado por bilheteria");
         d3.select("#chart4").selectAll("div.h-bar")
-                .data(data2)
+                .data(filmes)
             .enter().append("div")
             .attr("class", "h-bar")
             .append("span");
         
         d3.select("#chart4").selectAll("div.h-bar")
-                .data(data2)
+                .data(filmes)
             .attr("class", "h-bar")
             .style("max-width", function (d) {
-                return(d3.select("#chart4").node().getBoundingClientRect().width + "px");
+                return(d3.select("#chart1").node().getBoundingClientRect().width + "px");
             })
             .style("width", function (d) {
-                let max_wd = data2.sort(comparator1)[0].Worldwide_Gross_M;
+                let max_wd = filmes.sort(comparator1)[0].Worldwide_Gross_M;
                 let chart_wd = d3.select("#chart4").node().getBoundingClientRect().width;
                 
                 return (d.Worldwide_Gross_M) * chart_wd/max_wd + "px";
@@ -121,48 +120,29 @@
          if(comparator1)
             d3.select("#chart4")
                 .selectAll("div.h-bar") 
-                .sort(comparator1);
-        
-        
+                .sort(comparator1);     
     
     }; 
     
     function parseData(data){
-        let genres = [];
-        for(let i = 0; i < data.length; i++){
-            genres.push(data[i].Genre)
+        let genres = {};
+        for (filme in data){
+            genres[data[filme].Genre] = (typeof genres[data[filme].Genre]==='undefined') ? data[filme].Worldwide_Gross_M : genres[data[filme].Genre]+data[filme].Worldwide_Gross_M;
         }
         
-        function onlyUnique(value, index, self) { 
-            return self.indexOf(value) === index;
-        }
+        keys = Object.keys(genres)
         
-        genres_unique = genres.filter(onlyUnique); 
+        let filmes = [];
         
-        let bilheterias = [];
-        let valBilheteria;
-        for(let j=0; j < genres_unique.length; j++){
-            valBilheteria=0;
-            for(let i = 0; i < data.length; i++){
-                if(data[i].Genre === genres_unique[j]){
-                    valBilheteria += data[i].Worldwide_Gross_M
-                }
-            }
-            bilheterias.push(valBilheteria);
-        };
-        
-        let newData = []
-        
-        for(let i = 0;i < bilheterias.length;i++){
+        for (key in keys){
             let meuGenero = {
-                Genre: genres_unique[i],
-                Worldwide_Gross_M: bilheterias[i]
-            };
-            
-            newData.push(meuGenero)
+                Genre: keys[key],
+                Worldwide_Gross_M: genres[keys[key]]
+            }
+            filmes.push(meuGenero)   
         }
-        return newData;
-        //d3.select("#chart4").append("span").append("h1").text(newData[ind].Genre+': '+newData[ind].Bilheteria);
+        
+        return filmes
     }
 
     let comparaBilheteria = function (a, b) { 
