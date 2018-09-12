@@ -107,7 +107,7 @@
                 .data(filmes)
             .attr("class", "h-bar")
             .style("max-width", function (d) {
-                return(d3.select("#chart1").node().getBoundingClientRect().width + "px");
+                return(d3.select("#chart4").node().getBoundingClientRect().width + "px");
             })
             .style("width", function (d) {
                 let max_wd = filmes.sort(comparator1)[0].Worldwide_Gross_M;
