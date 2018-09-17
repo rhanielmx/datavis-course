@@ -1,0 +1,14 @@
+body{
+    font-family: 'Noto Serif KR', sans-serif;
+}
+
+#info{
+    max-width: 720px;
+    padding-left: 25px;
+}
+
+.resp_info{
+    text-align: justify;
+    font-size-adjust: auto;
+    background-color: #fafafa;
+}
