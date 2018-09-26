@@ -20,4 +20,8 @@
 
 [movies_scatter.html](d3_scale/movies_scatter.html)<br>
 
+## Aula do dia 12/09/2018
+
+[acoes.html](d3_crossfilter/acoes.html)<br>
+[movies_d3_dc.html](d3_crossfilter/movies_d3_dc.html)<br>
 ---
