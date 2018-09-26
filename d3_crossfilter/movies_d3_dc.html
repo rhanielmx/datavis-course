@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html>
 <head>
+    
     <meta charset="utf-8">
-    <title>Valores das ações da Tesla e do Facebook</title>
+    <title>Gráficos de Barra das Bilheterias</title>
     <link rel="stylesheet" href="css/dc.min.css">
     <link rel="stylesheet" href="css/styles.css">
     <script src="js/crossfilter.min.js"></script>
@@ -10,70 +11,64 @@
     <script src="js/dc.min.js"></script>
 
 </head>
-<body>
-     <div><h1> Valores das ações da Tesla e do Facebook</h1>
-        <div id="chart"></div>
+    
+<body style="margin-left: 50px;">
+    <div>
+        <h1>Bilheteria total ao longo dos anos</h1>
+        <div id="yearChart"></div>
     </div>
+    
+    <div style="clear:both">
+        <br>
+        <h1>Bilheteria total de cada gênero</h1>
+        <div id="genreChart" ></div>
+    </div>
+    
     <script type="text/javascript">
-        let fluctuationChart = dc.barChart('#fluctuation-chart');
+    
 
-        <div id='your-chart'></div>         
-        <div id='chart'><span>Days by Gain or Loss</span></div>
+        let yearChart = dc.barChart('#yearChart');
+        let genreChart = dc.barChart('#genreChart');
 
-        <div id='chart'>
-            <a class='reset'
-              href='javascript:myChart.filterAll();dc.redrawAll();'
-              style='visibility: hidden;'>reset
-            </a>
-        </div>
-
-
-        <div id='chart'>
-            <span class='reset' style='visibility: hidden;'>
-              Current filter: <span class='filter'></span>
-            </span>
-        </div>
-
+        
         d3.json('data/movies.json').then(function (data) {
-            // formatando nossos dados
-            let parseDate = d3.timeParse("%Y");
-            data.forEach(function(d){
-                d.Year = parseDate(d.Year);
-                d.Worldwide_Gross_M = +d.Worldwide_Gross_M;
-                d.Genre = d.Genre
-            });
-
+                        
             //criando um crossfilter
             let facts = crossfilter(data);
+            
+            //criando as dimensões
+            let yearDim = facts.dimension(d=>d.Year);            
+            let genreDim = facts.dimension(d=>d.Genre);
+            
+            //criando os grupos
+            let byYear = yearDim.group().reduceSum(d=>d.Worldwide_Gross_M);
+            let byGenre = genreDim.group().reduceSum(d=>d.Worldwide_Gross_M);
 
-            let yearDim = facts.dimension(function(d){
-                return d.Year;
-            });
-
-            let worldwideGrossByYearGroup = yearDim.group().reduceSum(function(d){
-                return d.Worldwide_Gross_M;
-            });
-
-            let xScale = d3.scaleTime()
-                           .domain([yearDim.bottom(1)[0].Year, yearDim.top(1)[0].Year]);
-
-            compositeChart.width(800)
-                     .height(400)
-                     .margins({top: 50, right: 50, bottom: 25, left: 40})
-                     .dimension(dateDim)
-                     .x(xScale)
-                     .xUnits(d3.timeDays)
+            yearChart.width(800)
+                     .height(600)
+                     .margins({top: 50, right: 50, bottom: 35, left: 40})
+                     .dimension(yearDim)
+                     .x(d3.scaleBand())                     
+                     .xAxisLabel('Ano')
+                     .xUnits(dc.units.ordinal)
+                     .yAxisLabel('Bilheteria Total')
                      .renderHorizontalGridLines(true)
-                     .legend(dc.legend().x(700).y(5).itemHeight(13).gap(5))
-                     .brushOn(false)    
-                     .compose([
-                        dc.lineChart(compositeChart)
-                                  .group(teslaByDayGroup, 'Tesla')
-                                  .ordinalColors(['steelblue']),
-                        dc.lineChart(compositeChart)
-                                  .group(fbByDayGroup, 'Facebook')
-                                  .ordinalColors(['darkorange'])]);
-
+                     .brushOn(false)
+                     .group(byYear)
+                     .gap(10);
+            
+            genreChart.width(800)
+                     .height(600)
+                     .margins({top: 50, right: 50, bottom: 35, left: 40})
+                     .dimension(genreDim)
+                     .x(d3.scaleBand())                     
+                     .xAxisLabel('Gênero')
+                     .xUnits(dc.units.ordinal)
+                     .yAxisLabel('Bilheteria Total')
+                     .renderHorizontalGridLines(true)
+                     .brushOn(false)
+                     .group(byGenre)         
+                     .gap(10);
             dc.renderAll();
 
         });
