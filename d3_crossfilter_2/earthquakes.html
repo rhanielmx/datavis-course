@@ -18,6 +18,7 @@
 </head>
 <body>
   <main role="main" class="container">
+    <h3> Earthquales in New Zealand </h3>
     <div class='row'>
 	    <div id='magnitude-chart' class="col-6">
 	      <h4> Number of Events by Magnitude </h4>
@@ -49,12 +50,14 @@
 	
 	let magnitudeChart = dc.barChart('#magnitude-chart');
 	let depthChart = dc.barChart('#depth-chart');
+    let timeChart = dc.lineChart('#time-chart');
+    let tableChart = dc.dataTable('#dc-table-graph');
 
 	// load data from a csv file
 	d3.csv("data/earthquakes.csv").then(function (data) {
 
 	  // format our data
-   		let parseDate = d3.utcParse("%Y/%m/%d");
+   		let parseDate = d3.utcParse("%Y-%m-%dT%H:%M:%S");
    		let parseMagnitude = d3.format(".1f");
    		let parseDepth = d3.format("d");
 
@@ -76,17 +79,23 @@
 	  // Create a dimension for Depth
      	let depthDim = facts.dimension(d=>d.depth);            
 
+        let dateDim = facts.dimension(d=>d.dtg); 
 	  //Create a group for Depth that just counts the number of elements in the group
 	  	let byDepth = depthDim.group();
 
 
 	  // Create a dimension just for the hour from the datetime in the dataset
 	  //hint: use d3.time.hour() function
-	  
-	  	let hourDim = facts.dimension(d=>d3.timeHours(d.dtg)); 
+     
+        let timeScale = d3.scaleTime()
+            .domain([dateDim.bottom(1)[0].dtg, dateDim.top(1)[0].dtg]);
+
+    	var hourDim = facts.dimension(d=>d3.timeHour(d.dtg));
+
+        let byDay = hourDim.group()
+            .reduceCount(d=>d.dtg);    
 
 	  //Create a group for the hour dimension that just counts the number of elements per hour
-	  	let byHour = hourDim.group();
 
 	  // Setup the charts
 
@@ -96,40 +105,56 @@
 	  //use a gap of 65, this number is very obscure. It seems to depend on the width of the chart and on the number of dimensions. It was found using trial and error.
 	  //set elasticY to true
 	  magnitudeChart.width(480)
-                     .height(150)
-                     .margins({top: 50, right: 50, bottom: 35, left: 40})
-                     .dimension(magnitudeDim)
-                     .x(d3.scaleBand().domain([0, 8]))                     
-                     .xAxisLabel('Ano')
-                     .xUnits(dc.units.ordinal)
-                     .yAxisLabel('Bilheteria Total')
-                     .renderHorizontalGridLines(true)
-                     .brushOn(false)
-                     .group(byMagnitude)
-                     .elasticY(true)
-                     .gap(50);
+                 .height(150)
+                 .dimension(magnitudeDim)
+                 .x(d3.scaleLinear().domain([0,8]))
+                 .renderHorizontalGridLines(true)
+                 .brushOn(false)
+                 .group(byMagnitude)
+                 .elasticY(true)
+                 .gap(53)
+                 .xAxis().tickFormat(function(v) {return v;});
+                 
 	  	
 
 	  // Configure Depth bar graph
 	  // 480 x 150
 	  // x dimension domain: [0, 100]
 	 depthChart.width(480)
-                     .height(150)
-                     .margins({top: 50, right: 50, bottom: 35, left: 40})
-                     .dimension(depthDim)
-                     .x(d3.scaleBand().domain([0, 100]))                     
-                     .xAxisLabel('Ano')
-                     .xUnits(dc.units.ordinal)
-                     .yAxisLabel('Bilheteria Total')
-                     .renderHorizontalGridLines(true)
-                     .brushOn(false)
-                     .group(byDepth)
-                     .elasticY(true)
-                     .gap(65);
+                 .height(150)
+                 .dimension(depthDim)
+                 .x(d3.scaleLinear().domain([0,100]))         
+                 .renderHorizontalGridLines(true)
+                 .brushOn(false)
+                 .group(byDepth)
+                 .elasticY(true)
+                 .gap(1)
+                 .xAxis().tickFormat(function(v) {return v;});
 
-	  // Configure Time line graph
+     
+
+      // Configure Time line graph
 	  // height: 150
 	  //x dimension: build the time scale from the data: d3.time.scale().domain(d3.extent(data, function(d) { return d.dtime; }))
+
+      timeChart.width(960)
+                .height(150)
+                .margins({top: 30, right: 50, bottom: 25, left: 40})
+                 .dimension(hourDim)
+                 .x(timeScale)
+                 .xUnits(d3.timeDays)
+                 .renderHorizontalGridLines(true)
+                 .brushOn(false)
+                 .group(byDay);
+
+     tableChart.width(960)
+                    .height(80)
+                    .dimension(dateDim)
+                    .group(function (d){ return "";})
+                    .size(10)
+                    .columns(['dtg', 'magnitude', 'depth', 'latitude', 'longitude'])
+                    .sortBy(d=>d.dtg)
+                    .order(d3.ascending);
 
 	  // Render the Charts
 	  dc.renderAll();
