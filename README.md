@@ -11,7 +11,6 @@
 [index09.html](basic/index09.html)<br>
 [index10.html](basic/index10.html)<br>
 
-
 ## Aula do dia 05/09/2018
 
 [movies_d3.html](d3_intro/movies_d3.html)<br>
@@ -20,9 +19,13 @@
 
 [movies_scatter.html](d3_scale/movies_scatter.html)<br>
 
-## Aula do dia 12/09/2018
+## Aula do dia 19/09/2018
 
 [acoes.html](d3_crossfilter/acoes.html)<br>
 [movies_d3_dc.html](d3_crossfilter/movies_d3_dc.html)<br>
+
+## Aula do dia 26/09/2018
+
+[earthquakes.html](d3_crossfilter_2/earthquakes.html)<br>
 
 ---
