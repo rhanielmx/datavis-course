@@ -33,4 +33,10 @@
 
 [chicago.html](d3_crossfilter_2/chicago.html)<br>
 
+## Aula do dia 31/10/2018
+
+[earthquakes.html](d3_interactive/earthquakes.html)<br>
+[usa.html](d3_interactive/usa.html)<br>
+
+
 ---
