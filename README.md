@@ -19,6 +19,10 @@
 
 [movies_scatter.html](d3_scale/movies_scatter.html)<br>
 
+## Aula do dia 17/09/2018
+
+[scatterplot.html.html](d3_update/01_scatterplot.html)<br>
+
 ## Aula do dia 19/09/2018
 
 [acoes.html](d3_crossfilter/acoes.html)<br>
